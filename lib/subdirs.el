@@ -1,0 +1,7 @@
+(defun add-subdirs-to-load-path (dir)
+  (when (fboundp 'normal-top-level-add-subdirs-to-load-path)
+    (let* ((dir (expand-file-name dir))
+           (default-directory (expand-file-name dir)))
+      (when (file-directory-p dir)
+        (setq load-path (cons dir load-path))
+        (normal-top-level-add-subdirs-to-load-path)))))
