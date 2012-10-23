@@ -316,14 +316,5 @@ of Emacs is used).  See `term+char-map' for the detail."
   (run-hooks 'term+line-mode-hook))
 (add-hook 'term-mode-hook #'term+setup)
 
-
-;;; optional features
-
-(eval-after-load 'key-intercept '(progn (require 'term+key-intercept)))
-(eval-after-load 'evil '(progn (require 'term+evil)))
-(eval-after-load 'multi-mode-util '(progn (require 'term+mode)))
-(eval-after-load 'anything-complete
-  '(progn (require 'term+anything-shell-history)))
-
 (provide 'term+)
 ;;; term+.el ends here

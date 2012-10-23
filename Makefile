@@ -2,8 +2,7 @@ SHELL = /bin/sh
 EMACS = emacs
 FILES = $(wildcard *.el)
 PROFILER =
-LIB = lib
-LIBS = -L "$(LIB)" -L lib/anything-config/extensions -l subdirs.el
+LIBS =
 
 ELCFILES = $(FILES:.el=.elc)
 
@@ -23,7 +22,6 @@ compile: $(ELCFILES)
 
 $(ELCFILES): %.elc: %.el
 	$(EMACS) --batch -Q -L . $(LIBS) \
---eval "(add-subdirs-to-load-path \"$(LIB)\")" \
 -f batch-byte-compile $<
 
 clean:
@@ -34,19 +32,13 @@ clean:
 
 emacs:
 	$(EMACS) -Q -L . $(LIBS) \
---eval "(add-subdirs-to-load-path \"$(LIB)\")" \
---eval "(require 'term+mux)" \
+--eval "(require 'term+)" \
 --eval "(require 'xterm-256color)" \
---eval "(require 'key-intercept)" \
---eval "(require 'multi-mode-util)" \
---eval "(term+mux-new)" &
+--eval "(call-interactively 'term)" &
 
 term: terminal
 terminal:
 	$(EMACS) -nw -Q -L . $(LIBS) \
---eval "(add-subdirs-to-load-path \"$(LIB)\")" \
---eval "(require 'term+mux)" \
+--eval "(require 'term+)" \
 --eval "(require 'xterm-256color)" \
---eval "(require 'key-intercept)" \
---eval "(require 'multi-mode-util)" \
---eval "(term+mux-new)"
+--eval "(call-interactively 'term)"

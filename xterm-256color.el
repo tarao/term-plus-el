@@ -132,6 +132,7 @@ non-256-color handling."
    ((and (<= 40 parameter) (<= parameter 47)) t)
    ((= parameter 49) t)
    (t (message "Unknown ANSI color sequence: %d" parameter))))
+(defsubst term-face (face &rest props) (append props face))
 (defadvice term-handle-colors-array
   (around term-256-color (parameter) activate)
   "Handle 256-color parameters."
@@ -215,15 +216,16 @@ non-256-color handling."
         (setq term-current-face
               (append term-bold-attribute term-current-face)))
       (when term-ansi-current-italic
-        (setq term-current-face (list* :slant 'italic term-current-face)))
+        (setq term-current-face (term-face term-current-face :slant 'italic)))
       (when term-ansi-current-underline
-        (setq term-current-face (list* :underline t term-current-face)))
+        (setq term-current-face (term-face term-current-face :underline t)))
       (when term-ansi-current-overline
-        (setq term-current-face (list* :overline t term-current-face)))
+        (setq term-current-face (term-face term-current-face :overline t)))
       (when term-ansi-current-strike
-        (setq term-current-face (list* :strike-through t term-current-face)))
+        (setq term-current-face
+              (term-face term-current-face :strike-through t)))
       (when term-ansi-current-frame
-        (setq term-current-face (list* :box t term-current-face)))))
+        (setq term-current-face (term-face term-current-face :box t)))))
   (setq term-ansi-256-reset nil))
 
 ;; xterm compatibility
