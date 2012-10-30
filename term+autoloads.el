@@ -37,8 +37,10 @@
   "Open a new terminal as a new tab without selecting the tab." t)
 (autoload 'term+mux-new "term+mux"
   "Open a new terminal as a new tab." t)
-(autoload 'term+mux-other-window "term+mux"
+(autoload 'term+mux-new-other-window "term+mux"
   "Open a new terminal as a new tab in the other window." t)
+(autoload 'term+mux-other-window "term+mux"
+  "Open a terminal in an other window."
 (autoload 'term+mux-new-command "term+mux"
   "Open a new terminal as a new tab with specifying a command to run." t)
 (autoload 'term+mux-new-session "term+mux"
