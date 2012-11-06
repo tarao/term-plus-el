@@ -133,6 +133,7 @@ It inherits the bindings of `term-mode-map'.")
 (defconst term+osc-emacs "\033]51;%s;")
 (defconst term+osc-sel "\033]52;%s;")
 (defconst term+-st "\033\\")
+(defconst term+-bel "\a")
 
 (defvar term+control-commands nil)
 (defvar term+control-command-pending-output nil)
