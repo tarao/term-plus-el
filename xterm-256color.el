@@ -36,12 +36,144 @@
 (defvar term-height)
 (defvar term-home-marker)
 
-(setq ansi-term-color-vector
-      [unspecified
-       "black"   "#c23621" "#25bc24" "#adad27"
-       "#492ee1" "#d338d3" "#33bbc8" "#cbcccd"
-       "#818383" "#fc391f" "#31e722" "#eaec23"
-       "#5833ff" "#f935f8" "#14f0f0" "white"])
+(defface term-color16-black
+  '((t :foreground "black" :background "black"))
+  "Face used to render black color code."
+  :group 'term)
+
+(defface term-color16-red
+  '((t :foreground "#c23621" :background "#c23621"))
+  "Face used to render red color code."
+  :group 'term)
+
+(defface term-color16-green
+  '((t :foreground "#25bc24" :background "#25bc24"))
+  "Face used to render green color code."
+  :group 'term)
+
+(defface term-color16-dark-yellow
+  '((t :foreground "#adad27" :background "#adad27"))
+  "Face used to render dark yellow color code."
+  :group 'term)
+
+(defface term-color16-blue
+  '((t :foreground "#492ee1" :background "#492ee1"))
+  "Face used to render blue color code."
+  :group 'term)
+
+(defface term-color16-magenta
+  '((t :foreground "#d338d3" :background "#d338d3"))
+  "Face used to render magenta color code."
+  :group 'term)
+
+(defface term-color16-cyan
+  '((t :foreground "#33bbc8" :background "#33bbc8"))
+  "Face used to render cyan color code."
+  :group 'term)
+
+(defface term-color16-dark-white
+  '((t :foreground "#cbcccd" :background "#cbcccd"))
+  "Face used to render dark white color code."
+  :group 'term)
+
+(defface term-color16-gray
+  '((t :foreground "#818383" :background "#818383"))
+  "Face used to render gray color code."
+  :group 'term)
+
+(defface term-color16-light-red
+  '((t :foreground "#fc391f" :background "#fc391f"))
+  "Face used to render light red color code."
+  :group 'term)
+
+(defface term-color16-light-green
+  '((t :foreground "#31e722" :background "#31e722"))
+  "Face used to render light green color code."
+  :group 'term)
+
+(defface term-color16-yellow
+  '((t :foreground "#eaec23" :background "#eaec23"))
+  "Face used to render yellow color code."
+  :group 'term)
+
+(defface term-color16-light-blue
+  '((t :foreground "#5833ff" :background "#5833ff"))
+  "Face used to render light blue color code."
+  :group 'term)
+
+(defface term-color16-light-magenta
+  '((t :foreground "#f935f8" :background "#f935f8"))
+  "Face used to render light magenta color code."
+  :group 'term)
+
+(defface term-color16-lgith-cyan
+  '((t :foreground "#14f0f0" :background "#14f0f0"))
+  "Face used to render light cyan color code."
+  :group 'term)
+
+(defface term-color16-white
+  '((t :foreground "white" :background "white"))
+  "Face used to render white color code."
+  :group 'term)
+
+(if (string< "24.2" emacs-version)
+    (setq ansi-term-color-vector
+          [term
+           term-color16-black
+           term-color16-red
+           term-color16-green
+           term-color16-dark-yellow
+           term-color16-blue
+           term-color16-magenta
+           term-color16-cyan
+           term-color16-dark-white
+           term-color16-gray
+           term-color16-light-red
+           term-color16-light-green
+           term-color16-yellow
+           term-color16-light-blue
+           term-color16-light-magenta
+           term-color16-lgith-cyan
+           term-color16-white])
+  (setq ansi-term-color-vector
+        [unspecified
+         "black"   "#c23621" "#25bc24" "#adad27"
+         "#492ee1" "#d338d3" "#33bbc8" "#cbcccd"
+         "#818383" "#fc391f" "#31e722" "#eaec23"
+         "#5833ff" "#f935f8" "#14f0f0" "white"])
+  ;; backports
+  (defface term
+    '((t :inherit default))
+    "Default face to use in Term mode."
+    :group 'term)
+  (defface term-bold
+    '((t :bold t))
+    "Default face to use for bold text."
+    :group 'term)
+  (defface term-underline
+    '((t :underline t))
+    "Default face to use for underlined text."
+    :group 'term))
+
+(defface term-italic
+  '((t :slant italic))
+  "Default face to use for italic text."
+  :group 'term)
+
+(defface term-overline
+  '((t :overline t))
+  "Default face to use for overline text."
+  :group 'term)
+
+(defface term-strike
+  '((t :strike-through t))
+  "Default face to use for struck through text."
+  :group 'term)
+
+(defface term-frame
+  '((t :box t))
+  "Default face to use for framed text."
+  :group 'term)
 
 ;; 256 colors
 (defvar term-ansi-256-reset nil)
@@ -55,12 +187,6 @@
 (defvar term-ansi-current-256-bg-color nil)
 (defun term-ansi-256-setup ()
   ;; fix default color
-  (when (equal term-default-fg-color "unspecified-fg")
-    (set (make-local-variable 'term-default-fg-color)
-         (face-foreground 'default)))
-  (when (equal term-default-bg-color "unspecified-bg")
-    (set (make-local-variable 'term-default-bg-color)
-         (face-background 'default)))
   (make-local-variable 'term-ansi-256-reset)
   (make-local-variable 'term-ansi-256-state)
   (make-local-variable 'term-ansi-current-bright)
@@ -87,17 +213,25 @@
 This corresponds to (setq term-ansi-face-already-done nil) for
 non-256-color handling."
   (setq term-ansi-256-reset nil))
+(defun term-ansi-16-color (i &optional prop)
+  (let ((color (elt ansi-term-color-vector i))
+        (prop (or prop :foreground)))
+    (if (symbolp color)
+        (if (eq prop :foreground)
+            (face-foreground color)
+          (face-background color))
+      color)))
 (defun term-ansi-set-16-color (color &optional background bright)
   (let* ((prop (if background :background :foreground))
          (color (if (and bright (<= 1 color) (<= color 8)) (+ color 8) color))
-         (color (elt ansi-term-color-vector color)))
+         (color (term-ansi-16-color color prop)))
     (setq term-current-face (plist-put term-current-face prop color))))
 (defvar term-ansi-256-color-vector [#x00 #x5F #x87 #xAF #xD7 #xFF])
-(defun term-ansi-256-color (parameter)
+(defun term-ansi-256-color (parameter &optional prop)
   (cond
    ((and (<= 0 parameter) (< parameter 16))
     ;; system colors
-    (elt ansi-term-color-vector (1+ parameter)))
+    (term-ansi-16-color (1+ parameter) prop))
    ((and (<= 16 parameter) (< parameter 232))
     ;; 6x6x6 colors
     (let* ((rgb (- parameter 16))
@@ -112,10 +246,10 @@ non-256-color handling."
     (let* ((step (- parameter 232))
            (g (+ 8 (* 10 step))))
       (format "#%02X%02X%02X" g g g)))
-   (t (elt ansi-term-color-vector 0))))
+   (t (term-ansi-16-color 0 prop))))
 (defun term-ansi-set-256-color (color &optional background)
-  (let ((prop (if background :background :foreground))
-        (color (term-ansi-256-color color)))
+  (let* ((prop (if background :background :foreground))
+         (color (term-ansi-256-color color prop)))
     (setq term-current-face (plist-put term-current-face prop color))))
 (defun term-warn-unknown-color (parameter)
   (cond
@@ -189,10 +323,9 @@ non-256-color handling."
       ad-do-it))))
   (unless term-ansi-256-reset
     (setq term-current-face (if term-ansi-current-reverse
-                                (list :background term-default-fg-color
-                                      :foreground term-default-bg-color)
-                              (list :foreground term-default-fg-color
-                                    :background term-default-bg-color)))
+                                (list :background (face-foreground 'term)
+                                      :foreground (face-background 'term))
+                              'term))
     (when (not (= term-ansi-current-color 0))
       (term-ansi-set-16-color term-ansi-current-color
                               term-ansi-current-reverse
@@ -212,27 +345,32 @@ non-256-color handling."
         (setq term-current-face
               (plist-put term-current-face :foreground
                          (plist-get term-current-face :background)))
+
       (when term-ansi-current-bold
         (setq term-current-face
-              (append term-bold-attribute term-current-face)))
-      (when term-ansi-current-italic
-        (setq term-current-face (term-face term-current-face :slant 'italic)))
+              `(,term-current-face :inherit term-bold)))
       (when term-ansi-current-underline
-        (setq term-current-face (term-face term-current-face :underline t)))
+        (setq term-current-face
+              `(,term-current-face :inherit term-underline)))
+      (when term-ansi-current-italic
+        (setq term-current-face
+              `(,term-current-face :inherit term-italic)))
       (when term-ansi-current-overline
-        (setq term-current-face (term-face term-current-face :overline t)))
+        (setq term-current-face
+              `(,term-current-face :inherit term-overline)))
       (when term-ansi-current-strike
         (setq term-current-face
-              (term-face term-current-face :strike-through t)))
+              `(,term-current-face :inherit term-strike)))
       (when term-ansi-current-frame
-        (setq term-current-face (term-face term-current-face :box t)))))
+        (setq term-current-face
+              `(,term-current-face :inherit term-frame)))))
   (setq term-ansi-256-reset nil))
 
 ;; xterm compatibility
 (defun term-need-filling ()
   (not (or (eq term-current-face 'default)
            (eq (plist-get term-current-face :background)
-               term-default-bg-color))))
+               (face-background 'term)))))
 (defun term-fill-char (char count)
   (let ((old-point (point)))
     (insert-char char count)
