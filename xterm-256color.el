@@ -116,7 +116,7 @@
   "Face used to render white color code."
   :group 'term)
 
-(if (string< "24.2" emacs-version)
+(if (string< "24.2.50" emacs-version)
     (setq ansi-term-color-vector
           [term
            term-color16-black
