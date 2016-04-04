@@ -1,7 +1,7 @@
 ;;; term+.el --- term-mode enhancement
 
 ;; Author: INA Lintaro <tarao.gnn at gmail.com>
-;; URL: http://github.com/tarao/term+-el
+;; URL: https://github.com/tarao/term-plus-el
 ;; Version: 0.1
 ;; Keywords: terminal, emulation
 
