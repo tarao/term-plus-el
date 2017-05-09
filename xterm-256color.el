@@ -25,7 +25,7 @@
 ;;; Code:
 
 (require 'term)
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 
 (setq term-term-name "xterm-256color")
 (when (and (featurep 'term+) (fboundp 'term+new-protocol))
@@ -444,7 +444,8 @@ erase from home to point; else erase from home to point-max."
 (defadvice term-insert-lines (around xterm-insert-lines activate)
   "Fill lines if the current color is not the default color."
   (if (term-need-filling)
-      (flet ((term-insert-char (char count) (term-fill-lines count)))
+      (cl-letf ((symbol-function 'term-insert-char)
+                (lambda (char count) (term-fill-lines count)))
         ad-do-it)
     ad-do-it))
 (defadvice term-delete-chars (around xterm-delete-char activate)

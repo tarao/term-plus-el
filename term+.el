@@ -4,6 +4,7 @@
 ;; URL: https://github.com/tarao/term-plus-el
 ;; Version: 0.1
 ;; Keywords: terminal, emulation
+;; Package-Requires: ((emacs "24") (cl-lib "0.5"))
 
 ;; This file is NOT part of GNU Emacs.
 
